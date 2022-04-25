@@ -1,25 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {Component} from "react";
+import Books from "./Books/Books";
+import BookService from "./repo/book-repo";
+import Authors from "./Authors/Authors";
+import AuthorService from "./repo/author-repo";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+class App extends Component{
+
+  constructor(props) {
+    super(props);
+    this.state ={
+      books : [],
+        authors : []
+    }
+  }
+
+  render(){
+    return (
+        <div>
+          <Books books = {this.state.books }/>
+            <Authors authors = {this.state.authors}/>
+        </div>
+    );
+  }
+
+  loadBooks = () => {
+      BookService.fetchBooks()
+        .then((data) =>{
+          this.setState({
+            books: data.data
+          })
+        });
+  }
+
+    loadAuthors = () => {
+        AuthorService.fetchAuthors()
+            .then((data) =>{
+                this.setState({
+                    authors: data.data
+                })
+            });
+    }
+
+  componentDidMount(){
+    this.loadBooks();
+    this.loadAuthors();
+  }
+
 }
 
 export default App;
